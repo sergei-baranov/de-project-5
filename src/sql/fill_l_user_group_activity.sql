@@ -18,3 +18,15 @@ WHERE
     hash(hu.hk_user_id, hg.hk_group_id)
         NOT IN (SELECT hk_l_user_group_activity FROM SERGEI_BARANOVTUTBY__DWH.l_user_group_activity)
 ;
+-- WHERE 
+--    hash(hu.hk_user_id, hg.hk_group_id) 
+--        NOT IN (SELECT hk_l_user_group_activity FROM SERGEI_BARANOVTUTBY__DWH.l_user_group_activity) 
+-- Сергей, учти, пожалуйста, что при преобразовании данных в WHERE,
+-- у тебя не будут использоваться индексы.
+-- Т.е. если у тебя был мульти индекс по двум hu.hk_user_id и hg.hk_group_id,
+-- то при их хешировании в WHERE СУБД не сможет проиндексировать их и будет сделан
+-- full table scan
+-- Подробнее про индексы можешь почитать вот в этой книге, тут всё очень хорошо объяснено.
+-- https://sql-performance-explained.com/
+-- В Vertica индексов нет, поэтому мой совет к работе с ней не подойдет,
+-- но учти это при работе с транзакционными СУБД
